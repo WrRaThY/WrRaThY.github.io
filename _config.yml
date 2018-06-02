@@ -26,10 +26,9 @@ github_username:  WrRaThY
 
 # Build settings
 markdown: kramdown
-#theme: minima
+theme: minima
 #theme: jekyll-theme-hacker
 #theme: jekyll-theme-architect
-remote_theme: "mmistakes/minimal-mistakes"
 plugins:
   - jekyll-feed
 
@@ -44,22 +43,3 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-
-comments:
-  provider: "staticman"
-staticman:
-  allowedFields          : ['name', 'email', 'url', 'message']
-  branch                 : # "master", "gh-pages"
-  commitMessage          : "New comment."
-  filename               : comment-{@timestamp}
-  format                 : "yml"
-  moderation             : false
-  path                   : "_data/comments/{options.slug}"
-  requiredFields         : ['name', 'email', 'message']
-  transforms:
-    email                : "md5"
-  generatedFields:
-    date:
-type               : "date"
-options:
-  format           : "iso8601"
