@@ -131,6 +131,9 @@ So when our project builds normally the documentation will NOT be built by defau
 In order to build it use `generate-html-docs` profile.  
 
 #### Project structure
+>parent
+>>documentation  
+>>rest-app
 
 ##### parent
 just a parent of a multi-module project  

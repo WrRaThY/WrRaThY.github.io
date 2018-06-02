@@ -12,29 +12,39 @@ It turns out that there are numbers of people who enjoy making their life diffic
 And it's one of the recent ones (2016). Check out some older ones. There are literally hundreds of them (like [this][example2] (2013) and [that][example3] (2015))
 
 So I decided that there must be a better way to do that... In [Spring docs][docs] you can find that there is an annotation called `@Scheduled` and it even takes a cron-like 
-expression as an argument. 
+expression as an argument.
+
+{% highlight java %}
 
     @Scheduled(cron = "*/15 * * * * *")
     public void justATestScheduledMethod() {
         System.out.println(LocalDateTime.now());
     }
+    
+{% endhighlight %}
 
 So far so good... This means that my super-complicated method will be executed once every 15 seconds.  
 
 #### But what about configuration? 
 So if you paid any attention to your [education][docs2] you must know that...  
 
+{% highlight java %}
+
     @Scheduled(cron = "${myapp.test-cron-scheduler}")
     public void justATestScheduledMethod() {
         System.out.println(LocalDateTime.now());
     }
+    
+{% endhighlight %}
 
 You can get any property with `${...}` syntax, so lets see if that works after moving my cron property to the `application.properties` file...
 
+```text
     17:18:47.139 INFO  (...).Application - Started Application in 4.076 seconds (JVM running for 4.649)
     2017-11-03T17:19:00.009
     2017-11-03T17:19:15.002
     2017-11-03T17:19:30.001
+```
 
 #### tadaaaam. 
 wasn't that hard, was it?
@@ -49,6 +59,8 @@ right. but there is any easy way to do that also:
 
 so my scheduler looks like that:
 
+{% highlight java %}
+
     @Configuration
     public class Bla {
         private final JobOperator jobOperator;
@@ -62,8 +74,12 @@ so my scheduler looks like that:
             Long jobExecutionId = jobOperator.startNextInstance("printTimeJob");
         }
     }
+    
+{% endhighlight %}
 
 and my batch job looks like that:
+
+{% highlight java %}
 
     @Bean
     Job printTimeJob() {
@@ -84,6 +100,7 @@ and my batch job looks like that:
                 .build();
 
     }
+{% endhighlight %}
 
 the output is a little bit more messed up...
 
@@ -118,8 +135,10 @@ see you next time and until then - `happy coding!`
 ## PS. one more thing!  
 don't forget to use those somewhere in your configuration:
 
+{% highlight java %}
     @EnableBatchProcessing
     @EnableScheduling
+{% endhighlight %}
 
 [docs]: https://docs.spring.io/spring/docs/current/spring-framework-reference/integration.html#scheduling
 [docs2]: https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#propertysource

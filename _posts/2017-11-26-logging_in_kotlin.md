@@ -11,15 +11,23 @@ I've been pretty busy lately. Partially, because I'm learning Kotlin in my spare
 I started rewriting one of my coding challenges (maybe I'll write something about it later on. for now you may want to check [this repository][tradeValidatorKotlin] out) and one of my problems was...  
 __how to instantiate loggers properly?__  
 This may seem stupid, but Kotlin rejects the idea of `static` fields, so you can't really write
-```java
-private static final Logger LOG = LoggerFactory.getLogger(SomeClass.class);
-```
+
+{% highlight java %}
+
+    private static final Logger LOG = LoggerFactory.getLogger(SomeClass.class);
+
+{% endhighlight %}
+
 in Kotlin. On the other hand you can use companion objects:
-```kotlin
-  companion object {
-    private val LOG = LoggerFactory.getLogger(TradeValidationEndpoint::class.java)
-  }
-```
+
+{% highlight kotlin %}
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(TradeValidationEndpoint::class.java)
+    }
+
+{% endhighlight %}
+
 But it's not that pretty, right?  
 Especially given the fact that Kotlin tries to be as expressive as possible.
 
