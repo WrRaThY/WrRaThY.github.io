@@ -7,8 +7,19 @@ categories: java jvm spring hystrix resilience4j
 
 it's been awhile... but without further ado - let's just get into it.
 # Circuit breakers - what's that?  
-I'm gonna assume that you, my dear reader, know what they are and if not - [there are smarter people than me that can explain that](https://martinfowler.com/bliki/CircuitBreaker.html)  
-Resilience in general is a bit broader topic and covers things like retrying, throttling and others. I'll let you google that on your own if you need to.  
+I'm gonna assume that you, my dear reader, know what they are and if not - 
+[there are smarter people than me that can explain that](https://martinfowler.com/bliki/CircuitBreaker.html). Below I'll just put a short quote from uncle Bob.  
+> The basic idea behind the circuit breaker is very simple. You wrap a protected function call in a circuit breaker object, which monitors for failures. Once the failures reach
+> a certain threshold, the circuit breaker opens, and all further calls to the circuit breaker return with an error, without the protected call being made at all. Usually you'll
+> also want some kind of monitor alert if the circuit breaker open.
+>
+> Martin Fowler
+
+Then usually the circuit breaker will test, from time to time, if it's safe to close the circuit again. If it's safe - we're back online. If it's not - we're still failing fast.
+
+Resilience in general is a bit broader topic and covers things like [retrying](https://docs.microsoft.com/en-us/azure/architecture/patterns/retry), 
+[throttling](https://docs.microsoft.com/en-us/azure/architecture/patterns/throttling) 
+and others. I'll let you google that on your own if you need to.  
 Bottom line is - in here you will learn how to use those patterns in Spring and I'll share a trick or two from my current project.
 
 # Which library to choose?
