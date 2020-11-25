@@ -56,7 +56,7 @@ public interface MyService {
                                          .build();
         MyService myService = Resilience4jFeign.builder(decorators).target(MyService.class, "http://localhost:8080/");
 ```
-apart from a simple fact that this does not compile as-is, which I find disturbing, it's just no readable. And it doesn't use spring-cloud-feign
+apart from a simple fact that this does not compile as-is, which I find disturbing, it's just not readable. And it doesn't use spring-cloud-feign
 
 The third option caught my attention and I prepared a POC with it (which I already deleted, so I won't recreate it here) 
 but integrating with retries (which are also needed in my project) was annoying. I'll just leave with an example from [the official docs](https://spring.io/guides/gs/cloud-circuit-breaker/):
@@ -141,7 +141,7 @@ public interface FailingClient {
 ```
 as you can see it's really short, but there are heaps of things happening here.
 1. with Feign this is it. u don't need to `implement` the client. the declaration is enough. so this is a ready to use http client already.
-2. We have `Retry` and `CircuitBreaker` annotations with the client name. this bit is important, because this config name correlates to the config name in the application-resilience.yml
+2. We have `Retry` and `CircuitBreaker` annotations with the client name. this bit is important, because this config name correlates to the config name in the `application-resilience.yml`
 3. There is no logging defined here, but we will get logs as configured in `application.yml` and `CircuitBreakerLoggingConfiguration`
 
 ### CircuitBreakerLoggingConfiguration
@@ -179,7 +179,7 @@ public void onEntryAddedEvent(EntryAddedEvent<CircuitBreaker> entryAddedEvent) {
 4.  `MDC.put` and `MDC.remove` - adds additional info to log statements. enables `the MDC trick`
 5.  `eventPublisher` has useful methods like `onSuccess` or `onError`, but I felt that the above approach is actually shorter / more understandable
 
-### `the MDC trick`
+### the MDC trick
 so those MDC entries are not really useful as-is (because this info is included in the `toString` anyway), 
 but in our case - we send logs to ELK (in JSON format, with adding all MDC fields), 
 so with those two MDC entries added we can actually create more meaningful visualisations, 
@@ -202,8 +202,103 @@ I encourage you to check out the config files, because you can play around with 
 - different types of retry / circuit breaker configs
 - values for those configs (which will result in different logs actually)
 
+example:
+```yaml
+resilience4j.retry:
+  configs:
+    default:
+      retryExceptions:
+        - feign.FeignException
+```
+this might be a bit too simplistic (u don't really want to retry on 400s in a real system, right?)  
+an easy fix could be just changing the exception to FeignServerException (which will catch only 500s)
+```yaml
+resilience4j.retry:
+  configs:
+    default:
+      retryExceptions:
+        - feign.FeignException.FeignServerException
+```
+
 If you feel like my configs are too simple... they are :)
 check out [this document](https://resilience4j.readme.io/docs/circuitbreaker#create-and-configure-a-circuitbreaker) from official docs for a full list of possible properties 
+
+### Free stuff!
+yes, we get some stuff literally for free. that stuff being - metrics. just enable actuator metrics and that's it. everything is handled for ya.  
+So try to explore those actuator endpoints, below I'll just give you some basic examples:
+
+`http://localhost:8080/actuator/circuitbreakerevents`
+```json
+{
+    "circuitBreakerEvents": [
+        {
+            "circuitBreakerName": "WorkingClient",
+            "type": "SUCCESS",
+            "creationTime": "2020-11-25T17:30:23.464618+13:00[Pacific/Auckland]",
+            "errorMessage": null,
+            "durationInMs": 2380,
+            "stateTransition": null
+        },
+(...)
+        {
+            "circuitBreakerName": "FailingClient",
+            "type": "FAILURE_RATE_EXCEEDED",
+            "creationTime": "2020-11-25T17:30:26.784061+13:00[Pacific/Auckland]",
+            "errorMessage": null,
+            "durationInMs": null,
+            "stateTransition": null
+        },
+        {
+            "circuitBreakerName": "FailingClient",
+            "type": "STATE_TRANSITION",
+            "creationTime": "2020-11-25T17:30:26.786452+13:00[Pacific/Auckland]",
+            "errorMessage": null,
+            "durationInMs": null,
+            "stateTransition": "CLOSED_TO_OPEN"
+        }
+    ]
+}
+```
+
+or `http://localhost:8080/actuator/metrics/resilience4j.circuitbreaker.calls`
+```json
+{
+    "name": "resilience4j.circuitbreaker.calls",
+    "description": "Total number of calls which failed but the exception was ignored",
+    "baseUnit": "seconds",
+    "measurements": [
+        {
+            "statistic": "COUNT",
+            "value": 5.0
+        },
+        {
+            "statistic": "TOTAL_TIME",
+            "value": 2.875985408
+        },
+        {
+            "statistic": "MAX",
+            "value": 0.0
+        }
+    ],
+    "availableTags": [
+        {
+            "tag": "kind",
+            "values": [
+                "ignored",
+                "failed",
+                "successful"
+            ]
+        },
+        {
+            "tag": "name",
+            "values": [
+                "WorkingClient",
+                "FailingClient"
+            ]
+        }
+    ]
+}
+```
 
 # Additional resources
 - maybe you didn't notice, but there are heaps of links in this post. just use them :)  
