@@ -6,7 +6,7 @@ categories: java jvm spring hystrix resilience4j
 ---
 
 it's been awhile... but without further ado - let's just get into it.
-# Circuit breakers - what's that?  
+# Circuit breakers - what are those?  
 I'm gonna assume that you, my dear reader, know what they are and if not - 
 [there are smarter people than me that can explain that](https://martinfowler.com/bliki/CircuitBreaker.html). Below I'll just put a short quote from uncle Bob.  
 > The basic idea behind the circuit breaker is very simple. You wrap a protected function call in a circuit breaker object, which monitors for failures. Once the failures reach
@@ -37,6 +37,7 @@ Things that I considered when choosing the right one:
 3. logging configuration should be generic / centralised - to avoid repetitive code
 4. library configuration should be external (not in code) to enable easy switching between environments
 5. the less code the better
+6. compatibility with [spring-cloud-feign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) - because we already had it in the project  
 
 Anyway, these days nothing is as easy as "just using a lib". Especially one that interferes with your external calls.  
 So Resilience4j can be used using one of the following: 
@@ -46,7 +47,7 @@ So Resilience4j can be used using one of the following:
 
 probably there are other ways, but I couldn't be bothered
 
-After some reading (and having [Spring-cloud-feign](https://cloud.spring.io/spring-cloud-openfeign/reference/html/) in the project, which is also a factor) I decided to discard the first option, 
+After some reading I decided to discard the first option, 
 because it would introduce too much clutter into the project. Example?
 so according to [official resilience4j documentation](https://resilience4j.readme.io/docs/feign)
  we should do the following to wrap feign clients
