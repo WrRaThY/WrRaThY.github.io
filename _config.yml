@@ -7,7 +7,11 @@
 #
 # For technical reasons, this file is *NOT* reloaded automatically when you use
 # 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-
+#
+# If you need help with YAML syntax, here are some quick references for you:
+# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
+# https://learnxinyminutes.com/docs/yaml/
+#
 # Site settings
 # These are used to personalize your new site. If you look in the HTML files,
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
@@ -17,28 +21,39 @@ title: Programming and Madness
 email: RadoslawDomanskiDev{spam-filter}gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   Yet another blog about programming...
-  Java, Kotlin, Groovy, JVM, Spring, SQL, HTML, whatever...
+  JS, TS, Java, Kotlin, Groovy, JVM, Spring, SQL, HTML, whatever...
   Some personal opinions about stuff, but mostly coding.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://wrrathy.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username:
 github_username:  WrRaThY
+author: Radosław Domański
 
-# Build settings
+
+# theme: minima
+remote_theme: pages-themes/hacker@v0.2.0
+
 markdown: kramdown
-theme: minima
-#theme: jekyll-theme-hacker
-#theme: jekyll-theme-architect
+
 plugins:
   - jekyll-feed
+  - jekyll-remote-theme
 
 # Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
+# The following items will not be processed, by default.
+# Any item listed under the `exclude:` key here will be automatically added to
+# the internal "default list".
+#
+# Excluded items can be processed by explicitly listing the directories or
+# their entries' file path in the `include:` list.
+#
 # exclude:
+#   - .sass-cache/
+#   - .jekyll-cache/
+#   - gemfiles/
 #   - Gemfile
 #   - Gemfile.lock
-#   - node_modules
+#   - node_modules/
 #   - vendor/bundle/
 #   - vendor/cache/
 #   - vendor/gems/

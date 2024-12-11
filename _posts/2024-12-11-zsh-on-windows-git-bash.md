@@ -9,10 +9,17 @@ categories: bash shell git zsh windows
 Well, yeah. But it requires some work.  
 The resources I used (linked at the bottom) are a bit outdated, so here is the updated version
 
+## Edit: Maybe steps 1-3 are not needed anymore
+
+There is an alternative that I just discovered (but didn't test as I had the whole setup ready).  
+Get the latest [RubyInstaller](https://rubyinstaller.org/downloads/). It will install ruby and MSYS2 and it will configure pacman and other things for you. Potentially ;) 
+
+
 ## 1. install [msys2](https://www.msys2.org/) and follow [this](https://stackoverflow.com/a/73565205/20691743)
    2. I didn’t follow it fully - it was hard to copy those files on windows. What worked for me was just copy-pasting things that returned as errors when running the commands below
 
 ## 2. run the following:
+
 ```shell
 mkdir -p /var/lib/pacman
 pacman-key --init
@@ -41,8 +48,9 @@ bash -c zsh
 ```
 
 # Now that we have `ZSH` - we can configure it
+
 ## 1. install [nerd fonts](https://www.nerdfonts.com/) 
-and configure them (quote below)
+and configure them (quote from [source 1](https://walterteng.com/using-zsh-on-windows#replace-git-bash-with-zsh) below)
 > Change Windows Terminal settings to use Nerd-Fonts
 Because we want Windows Terminal to be able to render the icons in the powerlevel10k theme correctly, we need to change the Windows Terminal configuration to use the Nerd-Font we've downloaded before. Click on Settings in the Windows Terminal menu and edit the settings.json file with your favorite text editor.
 > 
@@ -74,24 +82,31 @@ plugins=(git ssh-agent zsh-autosuggestions you-should-use zsh-bat)
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-source /c/Users/wooha/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 ```
 
-you can share `~/.bash_aliases` between `.bashrc` and `.zshrc`
+# And that's it
+
+The next time you run - oh-my-zsk will take you through the configuration, which is a pretty straight-forward process. Now you can brag to your friends that you have a more colorful terminal. yay ;)
 
 # tips and tricks
 
+- if you have some errors that cannot find stuff in `/home/<USERNAME>/<whatever>` - replace `~` in your scripts with a path like `/c/Users/<USERNAME>/<whatever>` 
 - you may need to add `--ssl-no-revoke` in curls (in case you use something I didn't update)
-- edit `.zshrc` and put this on top if you see `Command not found compdef`:
-
+- you can share `~/.bash_aliases` between `.bashrc` and `.zshrc` - the paths will be the same
+- if you see some git problems (like unauthorized, access denied, etc) - add the following lines towards the end of `~/.zshrc`:
+```
+ssh-add /c/Users/<USERNAME>/.ssh/id_github &> /dev/null
+```
+- if you see `Command not found compdef` before running powerlevel10k - edit `.zshrc` and put this on top:
 ```bash
 autoload -Uz compinit
 compinit
 ```
 
 # sources:
-- [Using zsh on Windows](https://walterteng.com/using-zsh-on-windows#replace-git-bash-with-zsh)
-- [videos/windows-terminal-powerlevel10k at main · ChristianLempa/videos](https://github.com/christianlempa/videos/tree/main/windows-terminal-powerlevel10k)
-- [The Only 5 Zsh Plugins You Need](https://catalins.tech/zsh-plugins/)
-- [Command not found compdef](https://documentation.breadnet.co.uk/kb/mac/command-not-found-compdef/)
+1. [Using zsh on Windows](https://walterteng.com/using-zsh-on-windows#replace-git-bash-with-zsh)
+2. [videos/windows-terminal-powerlevel10k at main · ChristianLempa/videos](https://github.com/christianlempa/videos/tree/main/windows-terminal-powerlevel10k)
+3. [The Only 5 Zsh Plugins You Need](https://catalins.tech/zsh-plugins/)
+4. [Command not found compdef](https://documentation.breadnet.co.uk/kb/mac/command-not-found-compdef/)
 

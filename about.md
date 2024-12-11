@@ -14,5 +14,5 @@ That said, I'll just give you link to places where you can find me
 
 - [GitHub](https://github.com/WrRaThY)
 - [Warsaw Java User Group](http://warszawa.jug.pl)
-- [Linked In](http://rndconsulting.eu)
+- [Linked In](https://www.linkedin.com/in/radoslaw-domanski/)
 
